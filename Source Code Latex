@@ -1,0 +1,380 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=1.18}
+
+\setstretch{1.05}
+
+\begin{document}
+
+\begin{center}
+    {\large \textbf{MATH4041/MCSC6120 Assignment 1}}\\
+    \vspace{2mm}
+    \textbf{Glucose Control, Part 1}\\
+    \vspace{1mm}
+    Logan Bostelmann
+\end{center}
+
+\section*{1. Derivation of the Two-Degree-of-Freedom Model}
+
+The glucose control model introduced in lecture is
+\begin{equation}
+u
+=
+\alpha v
++
+\beta
+\int_{-\infty}^{t}
+\lambda e^{-\lambda(t-t')}v(t')\,dt',
+\end{equation}
+together with
+\begin{equation}
+\dot v
+=
+-\gamma v-\delta u(v+\bar v)+F(t).
+\end{equation}
+
+To eliminate the integral, differentiate the first equation with
+respect to \(t\):
+\begin{align}
+\dot u
+&=
+\alpha\dot v
++
+\beta\lambda v
+-
+\beta\lambda
+\int_{-\infty}^{t}
+e^{-\lambda(t-t')}v(t')\,dt'.
+\end{align}
+
+From the original equation,
+\begin{equation}
+\beta
+\int_{-\infty}^{t}
+\lambda e^{-\lambda(t-t')}v(t')\,dt'
+=
+u-\alpha v.
+\end{equation}
+
+Therefore,
+\begin{equation}
+\beta\lambda
+\int_{-\infty}^{t}
+e^{-\lambda(t-t')}v(t')\,dt'
+=
+\lambda(u-\alpha v).
+\end{equation}
+
+Substituting this into the differentiated equation gives
+\begin{align}
+\dot u
+&=
+\alpha\dot v
++
+\beta\lambda v
+-
+\lambda(u-\alpha v)\\
+&=
+-\lambda u
++
+\lambda(\alpha+\beta)v
++
+\alpha\dot v.
+\end{align}
+
+Define
+\begin{equation}
+f(u,v)
+=
+-\gamma v-\delta u(v+\bar v)+F.
+\end{equation}
+
+Since
+\begin{equation}
+\dot v=f(u,v),
+\end{equation}
+the model can be written as the two-degree-of-freedom ODE system
+\begin{equation}
+\boxed{
+\begin{aligned}
+\dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v),\\
+\dot v&=-\gamma v-\delta u(v+\bar v)+F.
+\end{aligned}}
+\end{equation}
+
+\section*{2. Scaling the Variables}
+
+Following the lecture, introduce the dimensionless variables
+\begin{equation}
+v=\bar v v',
+\qquad
+u=\tilde u\,u',
+\qquad
+t=\tilde t\,t'.
+\end{equation}
+
+For the \(v\)-equation,
+\begin{equation}
+\frac{\bar v}{\tilde t}\frac{dv'}{dt'}
+=
+-\gamma\bar v v'
+-\delta\tilde u\bar v\,u'(v'+1)
++F.
+\end{equation}
+
+Dividing by \(\bar v/\tilde t\) gives
+\begin{equation}
+\frac{dv'}{dt'}
+=
+-(\gamma\tilde t)v'
+-(\delta\tilde t\tilde u)u'(v'+1)
++\frac{\tilde t}{\bar v}F.
+\end{equation}
+
+Choose the scales so that the coefficients of the first two terms
+are equal to one:
+\begin{equation}
+\gamma\tilde t=1,
+\qquad
+\delta\tilde t\tilde u=1.
+\end{equation}
+
+Hence,
+\begin{equation}
+\boxed{
+\tilde t=\frac{1}{\gamma},
+\qquad
+\tilde u=\frac{\gamma}{\delta}.
+}
+\end{equation}
+
+Define the dimensionless input parameter
+\begin{equation}
+\boxed{
+G=\frac{\tilde t}{\bar v}F
+=\frac{F}{\gamma\bar v}.
+}
+\end{equation}
+
+The \(v\)-equation therefore becomes
+\begin{equation}
+\frac{dv'}{dt'}
+=
+-v'-u'(v'+1)+G.
+\end{equation}
+
+Define
+\begin{equation}
+f'(u',v')
+=
+-v'-u'(v'+1)+G.
+\end{equation}
+
+For the \(u\)-equation,
+\begin{align}
+\frac{\tilde u}{\tilde t}\frac{du'}{dt'}
+&=
+-\lambda\tilde u u'
++
+\lambda(\alpha+\beta)\bar v v'
++
+\alpha f(u,v).
+\end{align}
+
+Using
+\begin{equation}
+f(u,v)
+=
+\frac{\bar v}{\tilde t}f'(u',v'),
+\end{equation}
+gives
+\begin{align}
+\frac{du'}{dt'}
+&=
+-(\lambda\tilde t)u'
++
+\lambda\bar v(\alpha+\beta)
+\frac{\tilde t}{\tilde u}v'
++
+\alpha\frac{\bar v}{\tilde u}f'(u',v').
+\end{align}
+
+Using the scales above, define the dimensionless parameters
+\begin{equation}
+\boxed{
+a=\frac{\lambda}{\gamma},
+\qquad
+b=\frac{\lambda\bar v\delta}{\gamma^2}(\alpha+\beta),
+\qquad
+c=\frac{\alpha\bar v\delta}{\gamma}.
+}
+\end{equation}
+
+Dropping the primes gives the dimensionless system
+\begin{equation}
+\boxed{
+\begin{aligned}
+\dot u&=-au+bv+cf(u,v),\\
+\dot v&=-v-u(v+1)+G,
+\end{aligned}}
+\end{equation}
+where
+\begin{equation}
+f(u,v)=-v-u(v+1)+G.
+\end{equation}
+
+\section*{3. Equilibrium Solutions}
+
+At equilibrium,
+\begin{equation}
+\dot u=\dot v=0.
+\end{equation}
+
+Since \(f(u,v)=0\) at equilibrium, the first equation gives
+\begin{equation}
+-au+bv=0.
+\end{equation}
+
+Therefore,
+\begin{equation}
+\boxed{
+u^*=\frac{b}{a}v^*.
+}
+\end{equation}
+
+The second equilibrium condition is
+\begin{equation}
+-v-u(v+1)+G=0.
+\end{equation}
+
+Substituting
+\begin{equation}
+u=\frac{b}{a}v
+\end{equation}
+gives
+\begin{equation}
+-v-\frac{b}{a}v(v+1)+G=0.
+\end{equation}
+
+Expanding,
+\begin{equation}
+-\frac{b}{a}v^2-\frac{b}{a}v-v+G=0.
+\end{equation}
+
+Multiplying by \(-a/b\) gives
+\begin{equation}
+v^2+v+\frac{a}{b}v-\frac{a}{b}G=0,
+\end{equation}
+or
+\begin{equation}
+v^2+
+\left(1+\frac{a}{b}\right)v
+-\frac{a}{b}G
+=0.
+\end{equation}
+
+Thus, exactly as in the lecture,
+\begin{equation}
+\boxed{
+v^*
+=
+-\frac{1}{2}
+\left(1+\frac{a}{b}\right)
+\pm
+\frac{1}{2}
+\sqrt{
+\left(1+\frac{a}{b}\right)^2
++
+\frac{4aG}{b}
+}.
+}
+\end{equation}
+
+The corresponding equilibrium values of \(u\) are
+\begin{equation}
+\boxed{
+u^*=\frac{b}{a}v^*.
+}
+\end{equation}
+
+The two equilibrium solutions coincide when
+\begin{equation}
+\left(1+\frac{a}{b}\right)^2
++
+\frac{4aG}{b}
+=0.
+\end{equation}
+
+Solving for \(G\) gives the saddle-node value
+\begin{equation}
+\boxed{
+G_{\mathrm{SN}}
+=
+-\frac{b}{4a}
+\left(1+\frac{a}{b}\right)^2.
+}
+\end{equation}
+
+Therefore, for \(a>0\) and \(b>0\), there are two real equilibrium
+solutions when
+\begin{equation}
+G>G_{\mathrm{SN}},
+\end{equation}
+one equilibrium at
+\begin{equation}
+G=G_{\mathrm{SN}},
+\end{equation}
+and no real equilibrium solutions when
+\begin{equation}
+G<G_{\mathrm{SN}}.
+\end{equation}
+
+Solving the equilibrium equation for \(G\) gives
+\begin{equation}
+\boxed{
+G
+=
+v^*
++
+\frac{b}{a}v^*(v^*+1).
+}
+\end{equation}
+
+Thus, the equilibrium branch has the saddle-node shape shown in
+lecture. A representative sketch is shown below.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.75\textwidth,
+    height=0.42\textwidth,
+    xlabel={$G$},
+    ylabel={$v^*$},
+    axis lines=middle,
+    xmin=-2.5,
+    xmax=2.0,
+    ymin=-2.5,
+    ymax=1.5,
+    samples=100,
+    domain=-2.3:1.5,
+    grid=major
+]
+
+\addplot[
+    thick
+]
+({x + x*(x+1)}, {x});
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+The figure illustrates the characteristic saddle-node shape of the
+equilibrium branch versus the input parameter \(G\).
+
+\end{document}
