@@ -21,7 +21,7 @@
 
 \section*{1. Derivation of the Two-Degree-of-Freedom Model}
 
-The glucose control model introduced in lecture is
+The glucose control model introduced in lecture is:
 \begin{equation}
 u
 =
@@ -31,7 +31,7 @@ u
 \int_{-\infty}^{t}
 \lambda e^{-\lambda(t-t')}v(t')\,dt',
 \end{equation}
-together with
+alongside:
 \begin{equation}
 \dot v
 =
@@ -70,7 +70,7 @@ e^{-\lambda(t-t')}v(t')\,dt'
 \lambda(u-\alpha v).
 \end{equation}
 
-Substituting this into the differentiated equation gives
+Substituting this into the differentiated equation gives:
 \begin{align}
 \dot u
 &=
@@ -87,18 +87,18 @@ Substituting this into the differentiated equation gives
 \alpha\dot v.
 \end{align}
 
-Define
+Define:
 \begin{equation}
 f(u,v)
 =
 -\gamma v-\delta u(v+\bar v)+F.
 \end{equation}
 
-Since
+Since,
 \begin{equation}
 \dot v=f(u,v),
 \end{equation}
-the model can be written as the two-degree-of-freedom ODE system
+the model can be written as the two-degree-of-freedom ODE system:
 \begin{equation}
 \boxed{
 \begin{aligned}
@@ -109,7 +109,7 @@ the model can be written as the two-degree-of-freedom ODE system
 
 \section*{2. Scaling the Variables}
 
-Following the lecture, introduce the dimensionless variables
+Following the lecture, introduce the dimensionless variables:
 \begin{equation}
 v=\bar v v',
 \qquad
@@ -127,7 +127,7 @@ For the \(v\)-equation,
 +F.
 \end{equation}
 
-Dividing by \(\bar v/\tilde t\) gives
+Dividing by \(\bar v/\tilde t\) gives:
 \begin{equation}
 \frac{dv'}{dt'}
 =
@@ -153,7 +153,7 @@ Hence,
 }
 \end{equation}
 
-Define the dimensionless input parameter
+Define the dimensionless input parameter,
 \begin{equation}
 \boxed{
 G=\frac{\tilde t}{\bar v}F
@@ -161,14 +161,14 @@ G=\frac{\tilde t}{\bar v}F
 }
 \end{equation}
 
-The \(v\)-equation therefore becomes
+The \(v\)-equation therefore becomes:
 \begin{equation}
 \frac{dv'}{dt'}
 =
 -v'-u'(v'+1)+G.
 \end{equation}
 
-Define
+Define:
 \begin{equation}
 f'(u',v')
 =
@@ -192,7 +192,7 @@ f(u,v)
 =
 \frac{\bar v}{\tilde t}f'(u',v'),
 \end{equation}
-gives
+gives us:
 \begin{align}
 \frac{du'}{dt'}
 &=
@@ -204,7 +204,7 @@ gives
 \alpha\frac{\bar v}{\tilde u}f'(u',v').
 \end{align}
 
-Using the scales above, define the dimensionless parameters
+Using the scales above, define the dimensionless parameters:
 \begin{equation}
 \boxed{
 a=\frac{\lambda}{\gamma},
@@ -215,7 +215,7 @@ c=\frac{\alpha\bar v\delta}{\gamma}.
 }
 \end{equation}
 
-Dropping the primes gives the dimensionless system
+Dropping the primes gives the dimensionless system:
 \begin{equation}
 \boxed{
 \begin{aligned}
@@ -223,7 +223,7 @@ Dropping the primes gives the dimensionless system
 \dot v&=-v-u(v+1)+G,
 \end{aligned}}
 \end{equation}
-where
+where,
 \begin{equation}
 f(u,v)=-v-u(v+1)+G.
 \end{equation}
@@ -235,7 +235,7 @@ At equilibrium,
 \dot u=\dot v=0.
 \end{equation}
 
-Since \(f(u,v)=0\) at equilibrium, the first equation gives
+Since \(f(u,v)=0\) at equilibrium, the first equation gives:
 \begin{equation}
 -au+bv=0.
 \end{equation}
@@ -247,16 +247,16 @@ u^*=\frac{b}{a}v^*.
 }
 \end{equation}
 
-The second equilibrium condition is
+The second equilibrium condition is:
 \begin{equation}
 -v-u(v+1)+G=0.
 \end{equation}
 
-Substituting
+Substituting,
 \begin{equation}
 u=\frac{b}{a}v
 \end{equation}
-gives
+gives:
 \begin{equation}
 -v-\frac{b}{a}v(v+1)+G=0.
 \end{equation}
@@ -266,7 +266,7 @@ Expanding,
 -\frac{b}{a}v^2-\frac{b}{a}v-v+G=0.
 \end{equation}
 
-Multiplying by \(-a/b\) gives
+Multiplying by \(-a/b\) gives:
 \begin{equation}
 v^2+v+\frac{a}{b}v-\frac{a}{b}G=0,
 \end{equation}
@@ -278,7 +278,7 @@ v^2+
 =0.
 \end{equation}
 
-Thus, exactly as in the lecture,
+Thus, exactly as in the lecture:
 \begin{equation}
 \boxed{
 v^*
@@ -295,14 +295,14 @@ v^*
 }
 \end{equation}
 
-The corresponding equilibrium values of \(u\) are
+The corresponding equilibrium values of \(u\) are:
 \begin{equation}
 \boxed{
 u^*=\frac{b}{a}v^*.
 }
 \end{equation}
 
-The two equilibrium solutions coincide when
+The two equilibrium solutions coincide when:
 \begin{equation}
 \left(1+\frac{a}{b}\right)^2
 +
@@ -310,7 +310,7 @@ The two equilibrium solutions coincide when
 =0.
 \end{equation}
 
-Solving for \(G\) gives the saddle-node value
+Solving for \(G\) gives the saddle-node value:
 \begin{equation}
 \boxed{
 G_{\mathrm{SN}}
@@ -321,20 +321,20 @@ G_{\mathrm{SN}}
 \end{equation}
 
 Therefore, for \(a>0\) and \(b>0\), there are two real equilibrium
-solutions when
+solutions when:
 \begin{equation}
 G>G_{\mathrm{SN}},
 \end{equation}
-one equilibrium at
+one equilibrium at:
 \begin{equation}
 G=G_{\mathrm{SN}},
 \end{equation}
-and no real equilibrium solutions when
+and no real equilibrium solutions when:
 \begin{equation}
 G<G_{\mathrm{SN}}.
 \end{equation}
 
-Solving the equilibrium equation for \(G\) gives
+Solving the equilibrium equation for \(G\) gives:
 \begin{equation}
 \boxed{
 G
@@ -346,7 +346,7 @@ v^*
 \end{equation}
 
 Thus, the equilibrium branch has the saddle-node shape shown in
-lecture. A representative sketch is shown below.
+lecture. A representative sketch is shown below:
 
 \begin{center}
 \begin{tikzpicture}
