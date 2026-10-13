@@ -13,77 +13,127 @@ def RK2step(u, h, p):
 h = 0.001
 nStep = 40000
 
-a = 0.1
-b = 1.0
-c = 1.0
-
-# G, u(0), v(0)
-experiments = [
-    [-3.1,  0,  0],
-    [-2.0,  0,  0],
-    [-1.3,  0,  0],
-    [-1.2,  0,  0],
-    [ 0.0,  0,  0],
-    [ 1.6,  0,  0],
-    [ 1.6, -2, -0.5],
-    [ 1.6, -4, -1.0],
-    [ 1.6, -8, -1.8]
-]
-
-Gsn = -(a + b)**2 / (4*a*b)
-print(f"Saddle-node value: G = {Gsn:.3f}\n")
-
-plt.figure(figsize=(9, 6))
-
-for G, u0, v0 in experiments:
-    p = [a, c, b, G]
-    u = np.array([u0, v0], dtype=float)
+def simulate(p, u0):
+    u = np.array(u0, dtype=float)
     path = [u.copy()]
     controlled = True
 
     for i in range(nStep):
         u = RK2step(u, h, p)
-        path.append(u.copy())
 
         if not np.all(np.isfinite(u)) or u[1] < -100:
             controlled = False
             break
 
-    path = np.array(path)
+        path.append(u.copy())
+
+    return np.array(path), controlled
+
+
+# Case 1: Constant parameters, varied initial conditions
+
+p = [0.1, 1.0, 1.0, 1.6]  # a, c, b, G
+
+initial_conditions = [
+    [0, 0],
+    [-2, -0.5],
+    [-4, -1],
+    [-6, -1.5],
+    [-8, -1.8]
+]
+
+print("CASE 1: CONSTANT PARAMETERS, VARIED INITIAL CONDITIONS\n")
+
+plt.figure(figsize=(8, 5))
+
+for u0 in initial_conditions:
+    path, controlled = simulate(p, u0)
 
     if controlled:
-        result = "Appears controlled"
+        result = "controlled over the simulated interval"
     else:
-        result = "Uncontrolled"
+        result = "not controlled"
 
-    print(f"G={G:4.1f}, initial=({u0}, {v0}): {result}")
+    print(f"For a={p[0]}, b={p[2]}, c={p[1]}, G={p[3]} "
+          f"and initial conditions {u0}, "
+          f"the behaviour is {result}.")
 
-    plt.plot(path[:, 0], path[:, 1],
-             label=f"G={G}, initial=({u0},{v0})")
+    plt.plot(path[:, 0], path[:, 1], label=str(u0))
 
 plt.xlabel("u")
 plt.ylabel("v")
-plt.title("Glucose Control: Numerical Experiments")
+plt.title("Case 1: Varied Initial Conditions")
+plt.legend()
 plt.grid()
-plt.legend(fontsize=8)
 plt.tight_layout()
-plt.savefig("Q4_experiments.pdf")
+plt.savefig("Q4_case1.pdf")
 plt.show()
 
-print("\nConclusions:\n")
 
-print("For parameter values a=0.1, b=1.0, c=1.0")
-print("and initial conditions (0,0), the tested values")
-print("G <= -1.3 show uncontrolled behaviour.")
+# Case 2: Constant initial conditions, varied parameters
 
-print("\nFor parameter values a=0.1, b=1.0, c=1.0")
-print("and initial conditions (0,0), the tested values")
-print("G >= -1.2 show apparently controlled behaviour.")
+u0 = [0, 0]
 
-print("\nFor parameter values a=0.1, b=1.0, c=1.0, G=1.6")
-print("and initial conditions (0,0), the behaviour appears controlled.")
+parameters = [
+    [0.1, 1.0, 1.0, -3.1],
+    [0.1, 1.0, 1.0, -2.0],
+    [0.1, 1.0, 1.0, -1.3],
+    [0.1, 1.0, 1.0, -1.2],
+    [0.1, 1.0, 1.0,  0.0],
+    [0.1, 1.0, 1.0,  1.6],
+    [0.5, 1.0, 1.0,  1.6],
+    [0.1, 2.0, 1.0,  1.6],
+    [0.1, 1.0, 2.0,  1.6]
+]
 
-print("\nFor the same parameters and initial conditions (-8,-1.8),")
+print("\nCASE 2: CONSTANT INITIAL CONDITIONS, VARIED PARAMETERS\n")
+
+plt.figure(figsize=(8, 5))
+
+for p in parameters:
+    path, controlled = simulate(p, u0)
+
+    if controlled:
+        result = "controlled over the simulated interval"
+    else:
+        result = "not controlled"
+
+    print(f"For a={p[0]}, b={p[2]}, c={p[1]}, G={p[3]} "
+          f"and initial conditions {u0}, "
+          f"the behaviour is {result}.")
+
+    plt.plot(path[:, 0], path[:, 1],
+             label=f"a={p[0]}, b={p[2]}, c={p[1]}, G={p[3]}")
+
+plt.xlabel("u")
+plt.ylabel("v")
+plt.title("Case 2: Varied Parameters")
+plt.legend(fontsize=7)
+plt.grid()
+plt.tight_layout()
+plt.savefig("Q4_case2.pdf")
+plt.show()
+
+
+# Conclusions
+
+print("\nCONCLUSIONS\n")
+
+a, c, b = 0.1, 1.0, 1.0
+Gsn = -(a + b)**2 / (4*a*b)
+
+print(f"For a={a}, b={b}, c={c}, G < {Gsn:.3f}, "
+      "the model has no real equilibrium and cannot "
+      "be controlled by convergence to an equilibrium.")
+
+print("\nFor a=0.1, b=1.0, c=1.0 and initial conditions (0,0),")
+print("the tested values G <= -1.3 show uncontrolled behaviour,")
+print("while the tested values G >= -1.2 appear controlled.")
+
+print("\nFor a=0.1, b=1.0, c=1.0, G=1.6 and")
+print("initial conditions (0,0), the behaviour appears controlled.")
+
+print("\nFor the same parameters but initial conditions (-8,-1.8),")
 print("the behaviour is uncontrolled.")
 
 print("\nThese conclusions are based on numerical experiments")
