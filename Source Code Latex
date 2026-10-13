@@ -1,9 +1,11 @@
+
 \documentclass[11pt]{article}
 
 \usepackage{amsmath,amssymb}
 \usepackage[margin=1in]{geometry}
 \usepackage{setspace}
 \usepackage{pgfplots}
+\usepackage{array}
 
 \pgfplotsset{compat=1.18}
 
@@ -21,7 +23,8 @@
 
 \section*{1. Derivation of the Two-Degree-of-Freedom Model}
 
-The glucose control model introduced in lecture is:
+We begin with the glucose control model introduced in lecture,
+which consists of an integral equation and a differential equation:
 \begin{equation}
 u
 =
@@ -31,28 +34,61 @@ u
 \int_{-\infty}^{t}
 \lambda e^{-\lambda(t-t')}v(t')\,dt',
 \end{equation}
-alongside:
+and
 \begin{equation}
 \dot v
 =
 -\gamma v-\delta u(v+\bar v)+F(t).
 \end{equation}
 
-To eliminate the integral, differentiate the first equation with
-respect to \(t\):
+Our goal is to eliminate the integral so that the model can be
+expressed as a system of two ordinary differential equations.
+To do this, we first differentiate the equation for \(u\)
+with respect to time:
 \begin{align}
 \dot u
 &=
 \alpha\dot v
 +
-\beta\lambda v
--
 \beta\lambda
+\frac{d}{dt}
+\left(
 \int_{-\infty}^{t}
-e^{-\lambda(t-t')}v(t')\,dt'.
+e^{-\lambda(t-t')}v(t')\,dt'
+\right).
 \end{align}
 
-From the original equation,
+Since the upper limit of integration depends on \(t\),
+we apply Leibniz's rule:
+\begin{align}
+\dot u
+&=
+\alpha\dot v
++
+\beta\lambda
+\left(
+v(t)
+-
+\lambda
+\int_{-\infty}^{t}
+e^{-\lambda(t-t')}v(t')\,dt'
+\right)\\
+&=
+\alpha\dot v
++
+\beta\lambda v
+-
+\lambda
+\left(
+\beta
+\int_{-\infty}^{t}
+\lambda e^{-\lambda(t-t')}v(t')\,dt'
+\right).
+\end{align}
+
+Notice that the remaining integral is the same one that
+appears in our original equation for \(u\). Rearranging
+that equation gives:
 \begin{equation}
 \beta
 \int_{-\infty}^{t}
@@ -61,16 +97,7 @@ From the original equation,
 u-\alpha v.
 \end{equation}
 
-Therefore,
-\begin{equation}
-\beta\lambda
-\int_{-\infty}^{t}
-e^{-\lambda(t-t')}v(t')\,dt'
-=
-\lambda(u-\alpha v).
-\end{equation}
-
-Substituting this into the differentiated equation gives:
+We can now substitute this expression into our derivative:
 \begin{align}
 \dot u
 &=
@@ -80,102 +107,70 @@ Substituting this into the differentiated equation gives:
 -
 \lambda(u-\alpha v)\\
 &=
--\lambda u
+\alpha\dot v
 +
 \lambda(\alpha+\beta)v
-+
-\alpha\dot v.
+-
+\lambda u.
 \end{align}
 
-Define:
+Finally, we introduce the notation:
 \begin{equation}
-f(u,v)
-=
--\gamma v-\delta u(v+\bar v)+F.
+\dot v=f(u,v).
 \end{equation}
 
-Since,
-\begin{equation}
-\dot v=f(u,v),
-\end{equation}
-the model can be written as the two-degree-of-freedom ODE system:
+This allows us to express the original model entirely in
+terms of two differential equations:
 \begin{equation}
 \boxed{
 \begin{aligned}
 \dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v),\\
-\dot v&=-\gamma v-\delta u(v+\bar v)+F.
+\dot v&=-\gamma v-\delta u(v+\bar v)+F(t).
 \end{aligned}}
 \end{equation}
 
+We have therefore obtained the required two-degree-of-freedom
+ODE system without the integral term.
+
 \section*{2. Scaling the Variables}
 
-Following the lecture, introduce the dimensionless variables:
+We now want to simplify the system by introducing dimensionless
+variables, reducing the number of parameters appearing in
+the equations.
+
+Recall the system obtained in Question 1:
 \begin{equation}
-v=\bar v v',
+\begin{aligned}
+\dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v),\\
+\dot v&=-\gamma v-\delta u(v+\bar v)+F(t).
+\end{aligned}
+\end{equation}
+
+Following the scaling approach from lecture, we introduce:
+\begin{equation}
+t=\tilde t\,t',
 \qquad
 u=\tilde u\,u',
 \qquad
-t=\tilde t\,t'.
+v=\bar v\,v'.
 \end{equation}
 
-For the \(v\)-equation,
+Because time is also being rescaled, we must account for
+this when transforming the derivatives:
 \begin{equation}
-\frac{\bar v}{\tilde t}\frac{dv'}{dt'}
+\dot u
 =
--\gamma\bar v v'
--\delta\tilde u\bar v\,u'(v'+1)
-+F.
-\end{equation}
-
-Dividing by \(\bar v/\tilde t\) gives:
-\begin{equation}
-\frac{dv'}{dt'}
-=
--(\gamma\tilde t)v'
--(\delta\tilde t\tilde u)u'(v'+1)
-+\frac{\tilde t}{\bar v}F.
-\end{equation}
-
-Choose the scales so that the coefficients of the first two terms
-are equal to one:
-\begin{equation}
-\gamma\tilde t=1,
+\frac{\tilde u}{\tilde t}\frac{du'}{dt'},
 \qquad
-\delta\tilde t\tilde u=1.
-\end{equation}
-
-Hence,
-\begin{equation}
-\boxed{
-\tilde t=\frac{1}{\gamma},
-\qquad
-\tilde u=\frac{\gamma}{\delta}.
-}
-\end{equation}
-
-Define the dimensionless input parameter,
-\begin{equation}
-\boxed{
-G=\frac{\tilde t}{\bar v}F
-=\frac{F}{\gamma\bar v}.
-}
-\end{equation}
-
-The \(v\)-equation therefore becomes:
-\begin{equation}
-\frac{dv'}{dt'}
+\dot v
 =
--v'-u'(v'+1)+G.
+\frac{\bar v}{\tilde t}\frac{dv'}{dt'}.
 \end{equation}
 
-Define:
-\begin{equation}
-f'(u',v')
-=
--v'-u'(v'+1)+G.
-\end{equation}
+Here, \(f'(u',v')\) represents the original dimensional
+function \(f\) evaluated using the scaled variables.
 
-For the \(u\)-equation,
+Substituting the new variables into both equations gives:
 \begin{align}
 \frac{\tilde u}{\tilde t}\frac{du'}{dt'}
 &=
@@ -183,102 +178,155 @@ For the \(u\)-equation,
 +
 \lambda(\alpha+\beta)\bar v v'
 +
-\alpha f(u,v).
+\alpha f'(u',v'),
+\\
+\frac{\bar v}{\tilde t}\frac{dv'}{dt'}
+&=
+-\gamma\bar v v'
+-
+\delta\tilde u u'(\bar v v'+\bar v)
++
+F(t).
 \end{align}
 
-Using
-\begin{equation}
-f(u,v)
-=
-\frac{\bar v}{\tilde t}f'(u',v'),
-\end{equation}
-gives us:
+Next, we isolate the derivatives by dividing through
+by their respective coefficients:
 \begin{align}
 \frac{du'}{dt'}
 &=
 -(\lambda\tilde t)u'
 +
-\lambda\bar v(\alpha+\beta)
-\frac{\tilde t}{\tilde u}v'
+\left(
+\frac{\lambda\bar v\tilde t}{\tilde u}
+\right)(\alpha+\beta)v'
 +
-\alpha\frac{\bar v}{\tilde u}f'(u',v').
+\left(
+\frac{\alpha\tilde t}{\tilde u}
+\right)f'(u',v'),
+\\
+\frac{dv'}{dt'}
+&=
+-(\gamma\tilde t)v'
+-
+(\delta\tilde u\tilde t)u'(v'+1)
++
+\frac{\tilde t}{\bar v}F(t).
 \end{align}
 
-Using the scales above, define the dimensionless parameters:
+To make the second equation simpler, we choose the time
+and \(u\)-scales such that:
+\begin{equation}
+\gamma\tilde t=1,
+\qquad
+\delta\tilde u\tilde t=1.
+\end{equation}
+
+This gives:
+\begin{equation}
+\boxed{
+\tilde t=\frac{1}{\gamma},
+\qquad
+\tilde u=\frac{1}{\delta\tilde t}
+=\frac{\gamma}{\delta}.
+}
+\end{equation}
+
+We also introduce the scaled input parameter:
+\begin{equation}
+\boxed{
+G=\frac{\tilde t}{\bar v}F(t).
+}
+\end{equation}
+
+With these choices, the system becomes:
+\begin{align}
+\frac{du'}{dt'}
+&=
+-\frac{\lambda}{\gamma}u'
++
+\frac{\lambda\delta\bar v}{\gamma^2}
+(\alpha+\beta)v'
++
+\frac{\alpha\delta}{\gamma^2}f'(u',v'),
+\\
+\frac{dv'}{dt'}
+&=
+-v'-u'(v'+1)+G.
+\end{align}
+
+We can simplify the notation further by defining
+three new parameters:
 \begin{equation}
 \boxed{
 a=\frac{\lambda}{\gamma},
 \qquad
-b=\frac{\lambda\bar v\delta}{\gamma^2}(\alpha+\beta),
+b=\frac{\lambda\delta\bar v}{\gamma^2}(\alpha+\beta),
 \qquad
-c=\frac{\alpha\bar v\delta}{\gamma}.
+c=\frac{\alpha\delta}{\gamma^2}.
 }
 \end{equation}
 
-Dropping the primes gives the dimensionless system:
+Using these definitions, the dimensionless system
+can be written more compactly as:
 \begin{equation}
 \boxed{
 \begin{aligned}
-\dot u&=-au+bv+cf(u,v),\\
-\dot v&=-v-u(v+1)+G,
+\frac{du'}{dt'}&=-au'+bv'+cf'(u',v'),\\
+\frac{dv'}{dt'}&=-v'-u'(v'+1)+G.
 \end{aligned}}
 \end{equation}
-where,
-\begin{equation}
-f(u,v)=-v-u(v+1)+G.
-\end{equation}
+
+This completes the scaling process, leaving us with
+a simpler system involving the reduced parameters
+\(a\), \(b\), \(c\), and the input \(G\).
 
 \section*{3. Equilibrium Solutions}
 
-At equilibrium,
+To determine the equilibrium solutions, we set both
+time derivatives equal to zero. Since our equations
+are now dimensionless, we can drop the primes
+for simplicity.
+
+The equilibrium conditions are:
 \begin{equation}
-\dot u=\dot v=0.
+\boxed{
+\begin{aligned}
+-au+bv&=0,\\
+-v-u(v+1)+G&=0.
+\end{aligned}}
 \end{equation}
 
-Since \(f(u,v)=0\) at equilibrium, the first equation gives:
+At equilibrium, \(f(u,v)=0\) because it represents
+the \(v\)-equation, whose derivative must also vanish.
+
+We begin by solving the first equation for \(u\):
 \begin{equation}
 -au+bv=0.
 \end{equation}
 
-Therefore,
+Rearranging gives:
 \begin{equation}
 \boxed{
 u^*=\frac{b}{a}v^*.
 }
 \end{equation}
 
-The second equilibrium condition is:
-\begin{equation}
--v-u(v+1)+G=0.
-\end{equation}
-
-Substituting,
-\begin{equation}
-u=\frac{b}{a}v
-\end{equation}
-gives:
+We then substitute this relationship into the second
+equilibrium equation:
 \begin{equation}
 -v-\frac{b}{a}v(v+1)+G=0.
 \end{equation}
 
-Expanding,
-\begin{equation}
--\frac{b}{a}v^2-\frac{b}{a}v-v+G=0.
-\end{equation}
-
-Multiplying by \(-a/b\) gives:
-\begin{equation}
-v^2+v+\frac{a}{b}v-\frac{a}{b}G=0,
-\end{equation}
-or
-\begin{equation}
+Expanding and collecting terms:
+\begin{align}
+-\frac{b}{a}v^2-\frac{b}{a}v-v+G&=0,\\
 v^2+
 \left(1+\frac{a}{b}\right)v
--\frac{a}{b}G
-=0.
-\end{equation}
+-\frac{a}{b}G&=0.
+\end{align}
 
-Thus, exactly as in the lecture:
+This is a quadratic equation in \(v\), so applying
+the quadratic formula gives:
 \begin{equation}
 \boxed{
 v^*
@@ -290,27 +338,22 @@ v^*
 \sqrt{
 \left(1+\frac{a}{b}\right)^2
 +
-\frac{4aG}{b}
+\frac{4a}{b}G
 }.
 }
 \end{equation}
 
-The corresponding equilibrium values of \(u\) are:
-\begin{equation}
-\boxed{
-u^*=\frac{b}{a}v^*.
-}
-\end{equation}
-
-The two equilibrium solutions coincide when:
+The number of real equilibrium solutions depends on
+the expression inside the square root. In particular,
+the two solutions coincide when:
 \begin{equation}
 \left(1+\frac{a}{b}\right)^2
 +
-\frac{4aG}{b}
-=0.
+\frac{4a}{b}G=0.
 \end{equation}
 
-Solving for \(G\) gives the saddle-node value:
+Solving this equation for \(G\) gives the critical
+saddle-node value:
 \begin{equation}
 \boxed{
 G_{\mathrm{SN}}
@@ -320,33 +363,78 @@ G_{\mathrm{SN}}
 }
 \end{equation}
 
-Therefore, for \(a>0\) and \(b>0\), there are two real equilibrium
-solutions when:
-\begin{equation}
-G>G_{\mathrm{SN}},
-\end{equation}
-one equilibrium at:
-\begin{equation}
-G=G_{\mathrm{SN}},
-\end{equation}
-and no real equilibrium solutions when:
-\begin{equation}
-G<G_{\mathrm{SN}}.
-\end{equation}
+Assuming \(a>0\) and \(b>0\), this critical value
+separates the three possible cases. For
+\(G<G_{\mathrm{SN}}\), there are no real equilibria.
+At \(G=G_{\mathrm{SN}}\), the two solutions merge
+into one, while for \(G>G_{\mathrm{SN}}\), two
+distinct real equilibria exist.
 
-Solving the equilibrium equation for \(G\) gives:
-\begin{equation}
-\boxed{
-G
-=
-v^*
-+
-\frac{b}{a}v^*(v^*+1).
+We can summarize these results in the following table:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.8}
+\small
+\begin{tabular}{|c|c|p{8.1cm}|}
+\hline
+\multicolumn{3}{|c|}{
+\textbf{Equilibrium Solutions as a Result of \(G\)}
+}\\
+\hline
+\textbf{Value of \(G\)}
+&
+\textbf{Number of Solutions}
+&
+\centering\arraybackslash
+\textbf{Equilibrium Solution(s)}
+\\
+\hline
+\(G<G_{\mathrm{SN}}\)
+&
+Zero
+&
+N/a
+\\
+\hline
+\(G=G_{\mathrm{SN}}\)
+&
+One
+&
+\(\displaystyle
+(u^*,v^*)=
+\left(
+\frac{b}{a}v^*,
+-\frac12\left(1+\frac{a}{b}\right)
+\right)
+\)
+\\
+\hline
+\(G>G_{\mathrm{SN}}\)
+&
+Two
+&
+\(\displaystyle
+(u^*,v^*)=
+\left(
+\frac{b}{a}v^*,
+-\frac12\left(1+\frac{a}{b}\right)
+\pm
+\frac12
+\sqrt{
+\left(1+\frac{a}{b}\right)^2+
+\frac{4a}{b}G
 }
-\end{equation}
+\right)
+\)
+\\
+\hline
+\end{tabular}
+\end{center}
 
-Thus, the equilibrium branch has the saddle-node shape shown in
-lecture. A representative sketch is shown below:
+To visualize these results, we can sketch the equilibrium
+branch against the input parameter \(G\). The curve
+illustrates how the two equilibrium solutions meet at
+the saddle-node point.
 
 \begin{center}
 \begin{tikzpicture}
@@ -360,7 +448,7 @@ lecture. A representative sketch is shown below:
     xmax=2.0,
     ymin=-2.5,
     ymax=1.5,
-    samples=100,
+    samples=150,
     domain=-2.3:1.5,
     grid=major
 ]
@@ -374,7 +462,9 @@ lecture. A representative sketch is shown below:
 \end{tikzpicture}
 \end{center}
 
-The figure illustrates the characteristic saddle-node shape of the
-equilibrium branch versus the input parameter \(G\).
+As shown in the sketch, the equilibrium branch bends
+at the critical value \(G_{\mathrm{SN}}\). This is
+where the two real equilibrium solutions coincide,
+illustrating the saddle-node behaviour of the model.
 
 \end{document}
