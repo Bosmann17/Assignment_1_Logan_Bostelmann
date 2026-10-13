@@ -1,0 +1,91 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def rhs(u, p):
+    a, c, b, G = p
+    f = -u[1] - u[0]*(u[1] + 1) + G
+    return np.array([-a*u[0] + c*f + b*u[1], f])
+
+def RK2step(u, h, p):
+    k1 = rhs(u, p)
+    return u + h*rhs(u + 0.5*h*k1, p)
+
+h = 0.001
+nStep = 40000
+
+a = 0.1
+b = 1.0
+c = 1.0
+
+# G, u(0), v(0)
+experiments = [
+    [-3.1,  0,  0],
+    [-2.0,  0,  0],
+    [-1.3,  0,  0],
+    [-1.2,  0,  0],
+    [ 0.0,  0,  0],
+    [ 1.6,  0,  0],
+    [ 1.6, -2, -0.5],
+    [ 1.6, -4, -1.0],
+    [ 1.6, -8, -1.8]
+]
+
+Gsn = -(a + b)**2 / (4*a*b)
+print(f"Saddle-node value: G = {Gsn:.3f}\n")
+
+plt.figure(figsize=(9, 6))
+
+for G, u0, v0 in experiments:
+    p = [a, c, b, G]
+    u = np.array([u0, v0], dtype=float)
+    path = [u.copy()]
+    controlled = True
+
+    for i in range(nStep):
+        u = RK2step(u, h, p)
+        path.append(u.copy())
+
+        if not np.all(np.isfinite(u)) or u[1] < -100:
+            controlled = False
+            break
+
+    path = np.array(path)
+
+    if controlled:
+        result = "Appears controlled"
+    else:
+        result = "Uncontrolled"
+
+    print(f"G={G:4.1f}, initial=({u0}, {v0}): {result}")
+
+    plt.plot(path[:, 0], path[:, 1],
+             label=f"G={G}, initial=({u0},{v0})")
+
+plt.xlabel("u")
+plt.ylabel("v")
+plt.title("Glucose Control: Numerical Experiments")
+plt.grid()
+plt.legend(fontsize=8)
+plt.tight_layout()
+plt.savefig("Q4_experiments.pdf")
+plt.show()
+
+print("\nConclusions:\n")
+
+print("For parameter values a=0.1, b=1.0, c=1.0")
+print("and initial conditions (0,0), the tested values")
+print("G <= -1.3 show uncontrolled behaviour.")
+
+print("\nFor parameter values a=0.1, b=1.0, c=1.0")
+print("and initial conditions (0,0), the tested values")
+print("G >= -1.2 show apparently controlled behaviour.")
+
+print("\nFor parameter values a=0.1, b=1.0, c=1.0, G=1.6")
+print("and initial conditions (0,0), the behaviour appears controlled.")
+
+print("\nFor the same parameters and initial conditions (-8,-1.8),")
+print("the behaviour is uncontrolled.")
+
+print("\nThese conclusions are based on numerical experiments")
+print("over the time interval 0 <= t <= 40.")
