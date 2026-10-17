@@ -1,4 +1,3 @@
-
 \documentclass[11pt]{article}
 
 \usepackage{amsmath,amssymb}
@@ -6,9 +5,8 @@
 \usepackage{setspace}
 \usepackage{pgfplots}
 \usepackage{array}
-
+\usepackage{graphicx}
 \pgfplotsset{compat=1.18}
-
 \setstretch{1.05}
 
 \begin{document}
@@ -26,19 +24,11 @@
 We begin with the glucose control model introduced in lecture,
 which consists of an integral equation and a differential equation:
 \begin{equation}
-u
-=
-\alpha v
-+
-\beta
-\int_{-\infty}^{t}
-\lambda e^{-\lambda(t-t')}v(t')\,dt',
+u=\alpha v+\beta\int_{-\infty}^{t}\lambda e^{-\lambda(t-t')}v(t')\,dt',
 \end{equation}
 and
 \begin{equation}
-\dot v
-=
--\gamma v-\delta u(v+\bar v)+F(t).
+\dot v=-\gamma v-\delta u(v+\bar v)+F(t).
 \end{equation}
 
 Our goal is to eliminate the integral so that the model can be
@@ -46,85 +36,43 @@ expressed as a system of two ordinary differential equations.
 To do this, we first differentiate the equation for \(u\)
 with respect to time:
 \begin{align}
-\dot u
-&=
-\alpha\dot v
-+
-\beta\lambda
-\frac{d}{dt}
-\left(
-\int_{-\infty}^{t}
-e^{-\lambda(t-t')}v(t')\,dt'
-\right).
+\dot u&=\alpha\dot v+\beta\lambda\frac{d}{dt}
+\left(\int_{-\infty}^{t}e^{-\lambda(t-t')}v(t')\,dt'\right).
 \end{align}
 
 Since the upper limit of integration depends on \(t\),
 we apply Leibniz's rule:
 \begin{align}
 \dot u
-&=
-\alpha\dot v
-+
-\beta\lambda
-\left(
-v(t)
--
-\lambda
-\int_{-\infty}^{t}
-e^{-\lambda(t-t')}v(t')\,dt'
-\right)\\
-&=
-\alpha\dot v
-+
-\beta\lambda v
--
-\lambda
-\left(
-\beta
-\int_{-\infty}^{t}
-\lambda e^{-\lambda(t-t')}v(t')\,dt'
-\right).
+&=\alpha\dot v+\beta\lambda\left(v(t)-\lambda
+\int_{-\infty}^{t}e^{-\lambda(t-t')}v(t')\,dt'\right)\\
+&=\alpha\dot v+\beta\lambda v-\lambda
+\left(\beta\int_{-\infty}^{t}\lambda e^{-\lambda(t-t')}v(t')\,dt'\right).
 \end{align}
 
 Notice that the remaining integral is the same one that
 appears in our original equation for \(u\). Rearranging
 that equation gives:
 \begin{equation}
-\beta
-\int_{-\infty}^{t}
-\lambda e^{-\lambda(t-t')}v(t')\,dt'
-=
-u-\alpha v.
+\beta\int_{-\infty}^{t}\lambda e^{-\lambda(t-t')}v(t')\,dt'=u-\alpha v.
 \end{equation}
 
 We can now substitute this expression into our derivative:
 \begin{align}
-\dot u
-&=
-\alpha\dot v
-+
-\beta\lambda v
--
-\lambda(u-\alpha v)\\
-&=
-\alpha\dot v
-+
-\lambda(\alpha+\beta)v
--
-\lambda u.
+\dot u&=\alpha\dot v+\beta\lambda v-\lambda(u-\alpha v)\\
+&=\alpha\dot v+\lambda(\alpha+\beta)v-\lambda u.
 \end{align}
 
 Finally, we introduce the notation:
 \begin{equation}
-\dot v=f(u,v).
+\dot v=f(u,v,t)=-\gamma v-\delta u(v+\bar v)+F(t).
 \end{equation}
 
 This allows us to express the original model entirely in
 terms of two differential equations:
 \begin{equation}
-\boxed{
-\begin{aligned}
-\dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v),\\
+\boxed{\begin{aligned}
+\dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v,t),\\
 \dot v&=-\gamma v-\delta u(v+\bar v)+F(t).
 \end{aligned}}
 \end{equation}
@@ -141,144 +89,98 @@ the equations.
 Recall the system obtained in Question 1:
 \begin{equation}
 \begin{aligned}
-\dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v),\\
+\dot u&=-\lambda u+\lambda(\alpha+\beta)v+\alpha f(u,v,t),\\
 \dot v&=-\gamma v-\delta u(v+\bar v)+F(t).
 \end{aligned}
 \end{equation}
 
 Following the scaling approach from lecture, we introduce:
 \begin{equation}
-t=\tilde t\,t',
-\qquad
-u=\tilde u\,u',
-\qquad
-v=\bar v\,v'.
+t=\tilde t\,t',\qquad u=\tilde u\,u',\qquad v=\bar v\,v'.
 \end{equation}
 
 Because time is also being rescaled, we must account for
 this when transforming the derivatives:
 \begin{equation}
-\dot u
-=
-\frac{\tilde u}{\tilde t}\frac{du'}{dt'},
+\dot u=\frac{\tilde u}{\tilde t}\frac{du'}{dt'},
 \qquad
-\dot v
-=
-\frac{\bar v}{\tilde t}\frac{dv'}{dt'}.
+\dot v=\frac{\bar v}{\tilde t}\frac{dv'}{dt'}.
 \end{equation}
 
-Here, \(f'(u',v')\) represents the original dimensional
-function \(f\) evaluated using the scaled variables.
+We also define the dimensionless function \(f'\) by:
+\begin{equation}
+f'(u',v',t')=\frac{\tilde t}{\bar v}
+f(\tilde u u',\bar v v',\tilde t t').
+\end{equation}
 
 Substituting the new variables into both equations gives:
 \begin{align}
 \frac{\tilde u}{\tilde t}\frac{du'}{dt'}
-&=
--\lambda\tilde u u'
-+
-\lambda(\alpha+\beta)\bar v v'
-+
-\alpha f'(u',v'),
-\\
+&=-\lambda\tilde u u'+\lambda(\alpha+\beta)\bar v v'
++\alpha\frac{\bar v}{\tilde t}f'(u',v',t'),\\
 \frac{\bar v}{\tilde t}\frac{dv'}{dt'}
-&=
--\gamma\bar v v'
--
-\delta\tilde u u'(\bar v v'+\bar v)
-+
-F(t).
+&=-\gamma\bar v v'-\delta\tilde u u'(\bar v v'+\bar v)+F(\tilde t t').
 \end{align}
 
 Next, we isolate the derivatives by dividing through
 by their respective coefficients:
 \begin{align}
 \frac{du'}{dt'}
-&=
--(\lambda\tilde t)u'
-+
-\left(
-\frac{\lambda\bar v\tilde t}{\tilde u}
-\right)(\alpha+\beta)v'
-+
-\left(
-\frac{\alpha\tilde t}{\tilde u}
-\right)f'(u',v'),
-\\
+&=-(\lambda\tilde t)u'
++\frac{\lambda\bar v\tilde t}{\tilde u}(\alpha+\beta)v'
++\frac{\alpha\bar v}{\tilde u}f'(u',v',t'),\\
 \frac{dv'}{dt'}
-&=
--(\gamma\tilde t)v'
--
-(\delta\tilde u\tilde t)u'(v'+1)
-+
-\frac{\tilde t}{\bar v}F(t).
+&=-(\gamma\tilde t)v'-(\delta\tilde u\tilde t)u'(v'+1)
++\frac{\tilde t}{\bar v}F(\tilde t t').
 \end{align}
 
 To make the second equation simpler, we choose the time
 and \(u\)-scales such that:
 \begin{equation}
-\gamma\tilde t=1,
-\qquad
-\delta\tilde u\tilde t=1.
+\gamma\tilde t=1,\qquad \delta\tilde u\tilde t=1.
 \end{equation}
 
 This gives:
 \begin{equation}
-\boxed{
-\tilde t=\frac{1}{\gamma},
-\qquad
-\tilde u=\frac{1}{\delta\tilde t}
-=\frac{\gamma}{\delta}.
-}
+\boxed{\tilde t=\frac1\gamma,\qquad
+\tilde u=\frac{1}{\delta\tilde t}=\frac\gamma\delta.}
 \end{equation}
 
-We also introduce the scaled input parameter:
+We also introduce the scaled input:
 \begin{equation}
-\boxed{
-G=\frac{\tilde t}{\bar v}F(t).
-}
+\boxed{G(t')=\frac{F(\tilde t t')}{\gamma\bar v}.}
 \end{equation}
 
 With these choices, the system becomes:
 \begin{align}
 \frac{du'}{dt'}
-&=
--\frac{\lambda}{\gamma}u'
-+
-\frac{\lambda\delta\bar v}{\gamma^2}
-(\alpha+\beta)v'
-+
-\frac{\alpha\delta}{\gamma^2}f'(u',v'),
-\\
-\frac{dv'}{dt'}
-&=
--v'-u'(v'+1)+G.
+&=-\frac\lambda\gamma u'
++\frac{\lambda\delta\bar v}{\gamma^2}(\alpha+\beta)v'
++\frac{\alpha\delta\bar v}{\gamma}f'(u',v',t'),\\
+\frac{dv'}{dt'}&=-v'-u'(v'+1)+G(t').
 \end{align}
 
 We can simplify the notation further by defining
 three new parameters:
 \begin{equation}
-\boxed{
-a=\frac{\lambda}{\gamma},
-\qquad
-b=\frac{\lambda\delta\bar v}{\gamma^2}(\alpha+\beta),
-\qquad
-c=\frac{\alpha\delta}{\gamma^2}.
-}
+\boxed{a=\frac\lambda\gamma,\qquad
+b=\frac{\lambda\delta\bar v}{\gamma^2}(\alpha+\beta),\qquad
+c=\frac{\alpha\delta\bar v}{\gamma}.}
 \end{equation}
 
 Using these definitions, the dimensionless system
 can be written more compactly as:
 \begin{equation}
-\boxed{
-\begin{aligned}
-\frac{du'}{dt'}&=-au'+bv'+cf'(u',v'),\\
-\frac{dv'}{dt'}&=-v'-u'(v'+1)+G.
+\boxed{\begin{aligned}
+\frac{du'}{dt'}&=-au'+bv'+cf'(u',v',t'),\\
+\frac{dv'}{dt'}&=f'(u',v',t')=-v'-u'(v'+1)+G(t').
 \end{aligned}}
 \end{equation}
 
-This completes the scaling process, leaving us with
-a simpler system involving the reduced parameters
-\(a\), \(b\), \(c\), and the input \(G\).
+For the equilibrium calculations and numerical experiments,
+we take \(G\) to be constant. This completes the scaling
+process, leaving us with the reduced parameters \(a\),
+\(b\), \(c\), and \(G\).
 
 \section*{3. Equilibrium Solutions}
 
@@ -289,8 +191,7 @@ for simplicity.
 
 The equilibrium conditions are:
 \begin{equation}
-\boxed{
-\begin{aligned}
+\boxed{\begin{aligned}
 -au+bv&=0,\\
 -v-u(v+1)+G&=0.
 \end{aligned}}
@@ -306,61 +207,39 @@ We begin by solving the first equation for \(u\):
 
 Rearranging gives:
 \begin{equation}
-\boxed{
-u^*=\frac{b}{a}v^*.
-}
+\boxed{u^*=\frac ba v^*.}
 \end{equation}
 
 We then substitute this relationship into the second
 equilibrium equation:
 \begin{equation}
--v-\frac{b}{a}v(v+1)+G=0.
+-v-\frac ba v(v+1)+G=0.
 \end{equation}
 
 Expanding and collecting terms:
 \begin{align}
--\frac{b}{a}v^2-\frac{b}{a}v-v+G&=0,\\
-v^2+
-\left(1+\frac{a}{b}\right)v
--\frac{a}{b}G&=0.
+-\frac ba v^2-\frac ba v-v+G&=0,\\
+v^2+\left(1+\frac ab\right)v-\frac ab G&=0.
 \end{align}
 
 This is a quadratic equation in \(v\), so applying
 the quadratic formula gives:
 \begin{equation}
-\boxed{
-v^*
-=
--\frac{1}{2}
-\left(1+\frac{a}{b}\right)
-\pm
-\frac{1}{2}
-\sqrt{
-\left(1+\frac{a}{b}\right)^2
-+
-\frac{4a}{b}G
-}.
-}
+\boxed{v^*=-\frac12\left(1+\frac ab\right)
+\pm\frac12\sqrt{\left(1+\frac ab\right)^2+\frac{4a}{b}G}.}
 \end{equation}
 
 The number of real equilibrium solutions depends on
 the expression inside the square root. In particular,
 the two solutions coincide when:
 \begin{equation}
-\left(1+\frac{a}{b}\right)^2
-+
-\frac{4a}{b}G=0.
+\left(1+\frac ab\right)^2+\frac{4a}{b}G=0.
 \end{equation}
 
 Solving this equation for \(G\) gives the critical
 saddle-node value:
 \begin{equation}
-\boxed{
-G_{\mathrm{SN}}
-=
--\frac{b}{4a}
-\left(1+\frac{a}{b}\right)^2.
-}
+\boxed{G_{\mathrm{SN}}=-\frac b{4a}\left(1+\frac ab\right)^2.}
 \end{equation}
 
 Assuming \(a>0\) and \(b>0\), this critical value
@@ -371,100 +250,243 @@ into one, while for \(G>G_{\mathrm{SN}}\), two
 distinct real equilibria exist.
 
 We can summarize these results in the following table:
-
 \begin{center}
-\renewcommand{\arraystretch}{1.8}
+\renewcommand{\arraystretch}{1.7}
 \small
 \begin{tabular}{|c|c|p{8.1cm}|}
 \hline
-\multicolumn{3}{|c|}{
-\textbf{Equilibrium Solutions as a Result of \(G\)}
-}\\
+\multicolumn{3}{|c|}{\textbf{Equilibrium Solutions as a Result of \(G\)}}\\
 \hline
-\textbf{Value of \(G\)}
-&
-\textbf{Number of Solutions}
-&
-\centering\arraybackslash
-\textbf{Equilibrium Solution(s)}
-\\
+\textbf{Value of \(G\)} & \textbf{Number of Solutions} &
+\centering\arraybackslash\textbf{Equilibrium Solution(s)}\\
 \hline
-\(G<G_{\mathrm{SN}}\)
-&
-Zero
-&
-N/a
-\\
+\(G<G_{\mathrm{SN}}\) & Zero & N/a\\
 \hline
-\(G=G_{\mathrm{SN}}\)
-&
-One
-&
+\(G=G_{\mathrm{SN}}\) & One &
+\(\displaystyle (u^*,v^*)=\left(\frac ba v^*,-\frac12\left(1+\frac ab\right)\right)\)\\
+\hline
+\(G>G_{\mathrm{SN}}\) & Two &
 \(\displaystyle
-(u^*,v^*)=
-\left(
-\frac{b}{a}v^*,
+(u^*,v^*)=\left(\frac{b}{a}v^*,\,
 -\frac12\left(1+\frac{a}{b}\right)
-\right)
-\)
-\\
-\hline
-\(G>G_{\mathrm{SN}}\)
-&
-Two
-&
-\(\displaystyle
-(u^*,v^*)=
-\left(
-\frac{b}{a}v^*,
--\frac12\left(1+\frac{a}{b}\right)
-\pm
-\frac12
-\sqrt{
-\left(1+\frac{a}{b}\right)^2+
-\frac{4a}{b}G
-}
-\right)
-\)
-\\
+\pm\frac12\sqrt{\left(1+\frac{a}{b}\right)^2+\frac{4a}{b}G}\right)
+\)\\
 \hline
 \end{tabular}
 \end{center}
 
+
 To visualize these results, we can sketch the equilibrium
-branch against the input parameter \(G\). The curve
-illustrates how the two equilibrium solutions meet at
-the saddle-node point.
+branch against the input parameter \(G\). Using the same
+values as the reference example, \(a=0.1\) and \(b=1.0\),
+we can rearrange the equilibrium equation as:
+\begin{equation}
+G=v^*+\frac ba v^*(v^*+1)=10(v^*)^2+11v^*.
+\end{equation}
 
 \begin{center}
 \begin{tikzpicture}
 \begin{axis}[
-    width=0.75\textwidth,
-    height=0.42\textwidth,
-    xlabel={$G$},
-    ylabel={$v^*$},
-    axis lines=middle,
-    xmin=-2.5,
-    xmax=2.0,
-    ymin=-2.5,
-    ymax=1.5,
-    samples=150,
-    domain=-2.3:1.5,
-    grid=major
+    width=0.78\textwidth, height=0.43\textwidth,
+    xlabel={$G$}, ylabel={$v^*$},
+    axis lines=middle, xmin=-3.6, xmax=3.5,
+    ymin=-1.5, ymax=0.55, samples=180, grid=major
 ]
-
-\addplot[
-    thick
-]
-({x + x*(x+1)}, {x});
-
+\addplot[thick,blue,domain=-0.55:0.23] ({10*x*x+11*x},{x});
+\addplot[thick,red,domain=-1.30:-0.55] ({10*x*x+11*x},{x});
+\addplot[only marks,mark=*,black] coordinates {(-3.025,-0.55)};
 \end{axis}
 \end{tikzpicture}
 \end{center}
 
-As shown in the sketch, the equilibrium branch bends
-at the critical value \(G_{\mathrm{SN}}\). This is
-where the two real equilibrium solutions coincide,
-illustrating the saddle-node behaviour of the model.
+As shown in the sketch, the two branches meet at
+\(G_{\mathrm{SN}}=-3.025\). Below this value, no real
+equilibrium solutions exist. Above it, we obtain two
+separate equilibrium solutions.
+
+
+\section*{4. Numerical Tests of Controllability}
+
+To investigate the controllability of the non-dimensional system, numerical experiments were conducted using the supplied Python script \texttt{g\_simul.py}. Following Question 3, parameter values $a = 0.1$ and $b = 1.0$ were held fixed, giving a saddle-node threshold of:
+\begin{equation}
+G_{\mathrm{SN}} = -\frac{1}{4(0.1)}(1.1)^2 = -3.025.
+\end{equation}
+
+Trajectories were simulated using a second-order Runge-Kutta scheme across representative values of $G$ selected from each of the three parameter regimes identified in Question 3:
+\begin{enumerate}
+    \item \textbf{Case 1 ($G < G_{\mathrm{SN}}$):} $G = -4.0$ (no equilibrium points).
+    \item \textbf{Case 2 ($G = G_{\mathrm{SN}}$):} $G = -3.025$ (single saddle point).
+    \item \textbf{Case 3 ($G > G_{\mathrm{SN}}$):} $G = 1.6$ (two equilibrium points).
+\end{enumerate}
+
+A trajectory was classified as \textbf{controlled} if it converged to a stable equilibrium point, and \textbf{uncontrolled} if it diverged toward $v \to -\infty$ (signaled by $v < -100$).
+
+\subsection*{Case 1: \(G=-3.7<G_{\mathrm{SN}}\)}
+
+Here, the discriminant from Question 3 is negative, so there are
+\textbf{no real equilibria}. I tried four initial conditions:
+\[
+(12,0),\qquad(0,12),\qquad(-12,0),\qquad(0,-12).
+\]
+Every run eventually reached the negative-\(v\) cutoff. This is
+consistent with the equilibrium calculation: there is no steady
+state for these solutions to approach.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.88\textwidth,height=0.52\textwidth,
+ xlabel={$u$},ylabel={$v$},grid=major,
+ xmin=-20,xmax=20,ymin=-20,ymax=20,
+ legend style={font=\scriptsize,at={(0.5,-0.19)},anchor=north},
+ legend columns=2,unbounded coords=jump]
+\addplot[very thick,blue,no marks] coordinates {(12.000,0.000) (10.863,-0.934) (9.448,-1.252) (7.974,-1.293) (6.502,-1.348) (5.030,-1.426) (3.561,-1.545) (2.100,-1.740) (0.665,-2.071) (-0.710,-2.598) (-2.003,-3.305) (-3.226,-4.125) (-4.404,-5.011) (-5.552,-5.936) (-6.682,-6.882) (-7.796,-7.847) (-8.900,-8.824) (-9.998,-9.807) (-11.087,-10.801) (-12.175,-11.794) (-13.255,-12.797) (-14.331,-13.804) (-15.407,-14.811) (-16.483,-15.819) (-17.559,-16.826) (-18.623,-17.847) (-19.687,-18.867) (-20.750,-19.887) (-21.814,-20.907) (-22.878,-21.927) (-23.942,-22.948) (-25.005,-23.968) (-26.069,-24.988) (-27.133,-26.008) (-28.196,-27.028) (-29.260,-28.049)};
+\addlegendentry{$(12,0)$}
+\addplot[very thick,red,no marks] coordinates {(0.000,12.000) (-0.207,10.718) (-0.302,9.422) (-0.361,8.124) (-0.421,6.826) (-0.497,5.529) (-0.604,4.234) (-0.769,2.946) (-1.051,1.679) (-1.580,0.496) (-2.437,-0.475) (-3.443,-1.296) (-4.464,-2.100) (-5.473,-2.919) (-6.468,-3.755) (-7.453,-4.602) (-8.429,-5.460) (-9.399,-6.325) (-10.362,-7.197) (-11.322,-8.073) (-12.277,-8.953) (-13.233,-9.834) (-14.181,-10.722) (-15.128,-11.611) (-16.076,-12.501) (-17.023,-13.390) (-17.966,-14.284) (-18.904,-15.182) (-19.843,-16.081) (-20.782,-16.979) (-21.720,-17.878) (-22.659,-18.776) (-23.598,-19.675) (-24.536,-20.573) (-25.475,-21.472) (-26.414,-22.370)};
+\addlegendentry{$(0,12)$}
+\addplot[very thick,teal,no marks] coordinates {(-12.000,0.000) (-10.773,1.087) (-9.548,2.176) (-8.318,3.260) (-7.078,4.332) (-5.825,5.388) (-4.544,6.411) (-3.221,7.377) (-1.788,8.164) (-0.584,7.524) (-0.503,5.890) (-0.607,4.254) (-0.825,2.630) (-1.279,1.059) (-2.218,-0.271) (-3.475,-1.321) (-4.761,-2.338) (-6.026,-3.380) (-7.272,-4.445) (-8.504,-5.527) (-9.725,-6.620) (-10.939,-7.721) (-12.145,-8.831) (-13.349,-9.943) (-14.546,-11.064) (-15.740,-12.186) (-16.934,-13.309) (-18.127,-14.433) (-19.310,-15.568) (-20.493,-16.702) (-21.676,-17.836) (-22.859,-18.971) (-24.043,-20.105) (-25.226,-21.239) (-26.409,-22.374) (-27.592,-23.508)};
+\addlegendentry{$(-12,0)$}
+\addplot[very thick,orange,no marks] coordinates {(0.000,-12.000) (-0.457,-11.535) (-1.117,-11.547) (-1.744,-11.784) (-2.332,-12.106) (-2.898,-12.466) (-3.453,-12.844) (-3.990,-13.247) (-4.523,-13.655) (-5.052,-14.068) (-5.568,-14.498) (-6.084,-14.928) (-6.599,-15.357) (-7.114,-15.789) (-7.616,-16.234) (-8.118,-16.680) (-8.621,-17.125) (-9.123,-17.571) (-9.625,-18.016) (-10.128,-18.461) (-10.630,-18.907) (-11.122,-19.364) (-11.613,-19.821) (-12.105,-20.278) (-12.596,-20.736) (-13.088,-21.193) (-13.579,-21.650) (-14.071,-22.108) (-14.562,-22.565) (-15.054,-23.022) (-15.545,-23.480) (-16.037,-23.937) (-16.528,-24.394) (-17.020,-24.852) (-17.511,-25.309) (-18.003,-25.766)};
+\addlegendentry{$(0,-12)$}
+\end{axis}
+\end{tikzpicture}
+\caption{Trajectories for \(G=-3.7\) from the four tested starting points.}
+\end{figure}
+
+\clearpage
+\subsection*{Case 2: \(G=-3.025=G_{\mathrm{SN}}\)}
+
+At the critical value, the two equilibrium branches meet. Using
+\(u^*=10v^*\), the only equilibrium is
+\[
+(u^*,v^*)=(-5.5,-0.55).
+\]
+The Jacobian has eigenvalues \(0\) and \(3.95\). Thus, this is a
+\textbf{nonhyperbolic equilibrium}, with an unstable direction
+corresponding to the positive eigenvalue.
+
+For this case, my initial conditions were
+\[
+(-6,-1.3),\quad(-5,0),\quad(-4.5,0.2),\quad(-7,-0.8).
+\]
+All four trajectories eventually passed the cutoff instead of
+remaining near the equilibrium. This only describes the points
+I tested; starting exactly at the equilibrium would give a
+constant solution.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.88\textwidth,height=0.52\textwidth,
+ xlabel={$u$},ylabel={$v$},grid=major,
+ xmin=-10,xmax=1,ymin=-6,ymax=4,
+ legend style={font=\scriptsize,at={(0.5,-0.19)},anchor=north},
+ legend columns=2,unbounded coords=jump]
+\addplot[very thick,blue,no marks] coordinates {(-6.000,-1.300) (-6.123,-1.403) (-6.247,-1.507) (-6.370,-1.610) (-6.492,-1.714) (-6.615,-1.819) (-6.737,-1.923) (-6.860,-2.028) (-6.982,-2.132) (-7.104,-2.237) (-7.225,-2.343) (-7.347,-2.448) (-7.468,-2.554) (-7.590,-2.659) (-7.711,-2.765) (-7.832,-2.871) (-7.953,-2.977) (-8.074,-3.083) (-8.194,-3.190) (-8.315,-3.296) (-8.435,-3.403) (-8.556,-3.510) (-8.676,-3.617) (-8.796,-3.724) (-8.916,-3.831) (-9.036,-3.938) (-9.156,-4.045) (-9.276,-4.152) (-9.396,-4.260) (-9.515,-4.368) (-9.635,-4.476) (-9.754,-4.584) (-9.874,-4.691) (-9.993,-4.799) (-10.113,-4.907) (-10.232,-5.015)};
+\addlegendentry{$(-6,-1.3)$}
+\addplot[very thick,red,no marks] coordinates {(-5.000,0.000) (-4.646,0.279) (-4.289,0.554) (-3.928,0.823) (-3.561,1.085) (-3.188,1.337) (-2.805,1.575) (-2.408,1.788) (-1.990,1.956) (-1.546,1.995) (-1.238,1.698) (-1.210,1.252) (-1.314,0.814) (-1.502,0.405) (-1.760,0.037) (-2.070,-0.290) (-2.411,-0.585) (-2.767,-0.861) (-3.129,-1.130) (-3.491,-1.397) (-3.852,-1.667) (-4.211,-1.940) (-4.567,-2.216) (-4.920,-2.496) (-5.271,-2.778) (-5.620,-3.063) (-5.967,-3.351) (-6.313,-3.640) (-6.657,-3.931) (-6.999,-4.224) (-7.341,-4.518) (-7.680,-4.814) (-8.020,-5.110) (-8.358,-5.409) (-8.695,-5.707) (-9.033,-6.006)};
+\addlegendentry{$(-5,0)$}
+\addplot[very thick,teal,no marks] coordinates {(-4.500,0.200) (-4.149,0.466) (-3.793,0.727) (-3.432,0.979) (-3.063,1.220) (-2.684,1.444) (-2.288,1.638) (-1.869,1.769) (-1.447,1.696) (-1.285,1.300) (-1.342,0.865) (-1.507,0.457) (-1.747,0.088) (-2.043,-0.238) (-2.372,-0.531) (-2.718,-0.803) (-3.071,-1.067) (-3.425,-1.329) (-3.779,-1.593) (-4.130,-1.859) (-4.479,-2.128) (-4.825,-2.401) (-5.169,-2.676) (-5.511,-2.954) (-5.851,-3.235) (-6.189,-3.517) (-6.526,-3.801) (-6.862,-4.086) (-7.196,-4.374) (-7.529,-4.662) (-7.861,-4.953) (-8.192,-5.243) (-8.522,-5.535) (-8.852,-5.828) (-9.181,-6.121) (-9.510,-6.414)};
+\addlegendentry{$(-4.5,0.2)$}
+\addplot[very thick,orange,no marks] coordinates {(-7.000,-0.800) (-7.096,-0.885) (-7.193,-0.970) (-7.289,-1.055) (-7.386,-1.140) (-7.482,-1.225) (-7.579,-1.310) (-7.675,-1.395) (-7.772,-1.480) (-7.868,-1.565) (-7.964,-1.650) (-8.061,-1.735) (-8.157,-1.821) (-8.253,-1.906) (-8.349,-1.992) (-8.445,-2.077) (-8.541,-2.163) (-8.637,-2.248) (-8.733,-2.334) (-8.829,-2.420) (-8.924,-2.505) (-9.020,-2.591) (-9.116,-2.677) (-9.211,-2.763) (-9.307,-2.849) (-9.402,-2.935) (-9.498,-3.021) (-9.593,-3.107) (-9.689,-3.194) (-9.784,-3.280) (-9.879,-3.366) (-9.974,-3.453) (-10.070,-3.539) (-10.165,-3.626) (-10.260,-3.712) (-10.355,-3.798)};
+\addlegendentry{$(-7,-0.8)$}
+\addplot[only marks,mark=star,mark size=3pt,black] coordinates {(-5.5,-0.55)};
+\addlegendentry{Equilibrium}
+\end{axis}
+\end{tikzpicture}
+\caption{Four trajectories near the merged equilibrium at \(G=-3.025\).}
+\end{figure}
+
+\clearpage
+\subsection*{Case 3: \(G=1.9>G_{\mathrm{SN}}\)}
+
+For the final case, the quadratic formula gives two equilibria:
+\[
+(u_1^*,v_1^*)\approx(1.518,0.152),\qquad
+(u_2^*,v_2^*)\approx(-12.518,-1.252).
+\]
+The Jacobian eigenvalues at the first point are approximately
+\(-0.419\) and \(-3.351\), so it is a \textbf{stable node}.
+At the second point, the eigenvalues are approximately
+\(-0.119\) and \(11.789\), so it is a \textbf{saddle point}.
+
+I tested six starting points to see whether the stable node
+would attract all of them:
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Initial condition \((u_0,v_0)\)} & \textbf{Observed result} \\
+\hline
+\((-8,-1.7)\) & Uncontrolled \\
+\((-6,-0.4)\) & Controlled \\
+\((-7,-1.3)\) & Controlled \\
+\((-4,-1.4)\) & Controlled \\
+\((-5,-0.6)\) & Controlled \\
+\((-9,-1.9)\) & Uncontrolled \\
+\hline
+\end{tabular}
+\end{center}
+
+Four trajectories approached the stable node, while two
+escaped. Therefore, even when a stable equilibrium exists,
+control still depends on the initial condition.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.88\textwidth,height=0.52\textwidth,
+ xlabel={$u$},ylabel={$v$},grid=major,
+ xmin=-16,xmax=6,ymin=-10,ymax=5,
+ legend style={font=\scriptsize,at={(0.5,-0.19)},anchor=north},
+ legend columns=2,unbounded coords=jump]
+\addplot[very thick,blue,no marks] coordinates {(-8.000,-1.700) (-8.339,-1.953) (-8.667,-2.218) (-8.991,-2.490) (-9.312,-2.765) (-9.631,-3.043) (-9.948,-3.323) (-10.264,-3.603) (-10.579,-3.885) (-10.894,-4.168) (-11.206,-4.452) (-11.519,-4.736) (-11.832,-5.020) (-12.143,-5.306) (-12.454,-5.593) (-12.766,-5.879) (-13.077,-6.165) (-13.387,-6.452) (-13.696,-6.741) (-14.005,-7.029) (-14.314,-7.317) (-14.624,-7.605) (-14.933,-7.893) (-15.242,-8.181) (-15.550,-8.471) (-15.857,-8.762) (-16.164,-9.052) (-16.472,-9.342) (-16.779,-9.633) (-17.086,-9.923) (-17.394,-10.213) (-17.701,-10.503) (-18.008,-10.794) (-18.315,-11.084) (-18.623,-11.374) (-18.930,-11.664)};
+\addlegendentry{$(-8,-1.7)$}
+\addplot[very thick,red,no marks] coordinates {(-6.000,-0.400) (-5.766,-0.177) (-5.530,0.044) (-5.292,0.263) (-5.053,0.480) (-4.812,0.695) (-4.569,0.909) (-4.326,1.121) (-4.080,1.332) (-3.834,1.541) (-3.585,1.748) (-3.335,1.952) (-3.083,2.155) (-2.828,2.354) (-2.572,2.550) (-2.311,2.742) (-2.048,2.929) (-1.779,3.109) (-1.505,3.280) (-1.224,3.439) (-0.931,3.576) (-0.625,3.678) (-0.304,3.704) (-0.011,3.581) (0.181,3.324) (0.296,3.022) (0.374,2.708) (0.437,2.391) (0.497,2.074) (0.560,1.757) (0.634,1.442) (0.728,1.133) (0.853,0.835) (1.023,0.561) (1.249,0.330) (1.518,0.152)};
+\addlegendentry{$(-6,-0.4)$}
+\addplot[very thick,teal,no marks] coordinates {(-7.000,-1.300) (-6.782,-1.005) (-6.529,-0.737) (-6.268,-0.477) (-6.003,-0.222) (-5.734,0.030) (-5.463,0.279) (-5.190,0.526) (-4.915,0.772) (-4.639,1.015) (-4.360,1.256) (-4.080,1.495) (-3.798,1.732) (-3.514,1.966) (-3.228,2.198) (-2.939,2.426) (-2.647,2.650) (-2.350,2.869) (-2.049,3.081) (-1.742,3.284) (-1.428,3.476) (-1.102,3.646) (-0.760,3.783) (-0.399,3.846) (-0.053,3.739) (0.170,3.451) (0.295,3.105) (0.377,2.746) (0.444,2.384) (0.509,2.022) (0.582,1.661) (0.673,1.304) (0.796,0.957) (0.970,0.634) (1.215,0.359) (1.518,0.152)};
+\addlegendentry{$(-7,-1.3)$}
+\addplot[very thick,orange,no marks] coordinates {(-4.000,-1.400) (-3.896,-1.207) (-3.768,-1.029) (-3.630,-0.858) (-3.486,-0.694) (-3.336,-0.533) (-3.184,-0.375) (-3.028,-0.220) (-2.871,-0.068) (-2.711,0.083) (-2.550,0.231) (-2.386,0.378) (-2.221,0.522) (-2.054,0.665) (-1.886,0.805) (-1.715,0.942) (-1.542,1.077) (-1.367,1.209) (-1.188,1.337) (-1.006,1.460) (-0.820,1.576) (-0.629,1.683) (-0.431,1.777) (-0.224,1.849) (-0.007,1.882) (0.207,1.845) (0.385,1.719) (0.513,1.542) (0.612,1.346) (0.700,1.145) (0.791,0.946) (0.894,0.752) (1.016,0.570) (1.162,0.407) (1.332,0.268) (1.518,0.152)};
+\addlegendentry{$(-4,-1.4)$}
+\addplot[very thick,violet,no marks] coordinates {(-5.000,-0.600) (-4.811,-0.410) (-4.618,-0.223) (-4.424,-0.039) (-4.228,0.144) (-4.029,0.324) (-3.830,0.504) (-3.629,0.681) (-3.426,0.857) (-3.222,1.031) (-3.017,1.203) (-2.810,1.373) (-2.601,1.541) (-2.390,1.707) (-2.177,1.869) (-1.961,2.028) (-1.742,2.183) (-1.519,2.332) (-1.292,2.475) (-1.059,2.607) (-0.819,2.726) (-0.568,2.820) (-0.305,2.871) (-0.041,2.837) (0.174,2.683) (0.316,2.457) (0.413,2.207) (0.489,1.950) (0.558,1.691) (0.629,1.432) (0.710,1.176) (0.808,0.927) (0.933,0.690) (1.094,0.476) (1.292,0.296) (1.518,0.152)};
+\addlegendentry{$(-5,-0.6)$}
+\addplot[very thick,magenta,no marks] coordinates {(-9.000,-1.900) (-9.317,-2.164) (-9.631,-2.432) (-9.942,-2.704) (-10.251,-2.977) (-10.559,-3.252) (-10.866,-3.527) (-11.172,-3.804) (-11.478,-4.081) (-11.783,-4.359) (-12.088,-4.638) (-12.392,-4.916) (-12.695,-5.197) (-12.998,-5.477) (-13.301,-5.757) (-13.604,-6.037) (-13.906,-6.318) (-14.208,-6.600) (-14.509,-6.882) (-14.811,-7.164) (-15.112,-7.445) (-15.414,-7.727) (-15.715,-8.009) (-16.016,-8.292) (-16.315,-8.576) (-16.615,-8.860) (-16.915,-9.143) (-17.214,-9.427) (-17.514,-9.711) (-17.814,-9.995) (-18.113,-10.279) (-18.413,-10.562) (-18.713,-10.846) (-19.012,-11.130) (-19.312,-11.414) (-19.612,-11.697)};
+\addlegendentry{$(-9,-1.9)$}
+\addplot[only marks,mark=star,mark size=3pt,black] coordinates {(1.5178,0.1518) (-12.5178,-1.2518)};
+\addlegendentry{Equilibria}
+\end{axis}
+\end{tikzpicture}
+\caption{The six tested trajectories for \(G=1.9\), including both outcomes.}
+\end{figure}
+
+\clearpage
+\subsection*{Conclusions on Controllability}
+
+Based on the simulations and the equilibrium calculations,
+I can make the following statements for the parameters tested:
+\begin{itemize}
+\item \textbf{For \(a=0.1\), \(b=1.0\), and \(G<-3.025\), the model
+cannot settle at a finite equilibrium.} There are no real
+steady states in this range, and all four trajectories I
+simulated at \(G=-3.7\) were uncontrolled.
+
+\item \textbf{For \(a=0.1\), \(b=1.0\), \(c=1.0\), and
+\(G=-3.025\), none of my four tested initial conditions were
+controlled.} The single equilibrium \((-5.5,-0.55)\) has an
+unstable direction, although this does not rule out special
+initial conditions that remain at or approach it.
+
+\item \textbf{For \(a=0.1\), \(b=1.0\), \(c=1.0\), and \(G=1.9\),
+the behaviour is controlled for the tested initial conditions
+\((-6,-0.4)\), \((-7,-1.3)\), \((-4,-1.4)\), and \((-5,-0.6)\).}
+These trajectories approach the stable node near
+\((1.518,0.152)\). However, the tested points \((-8,-1.7)\)
+and \((-9,-1.9)\) were uncontrolled.
+\end{itemize}
+
+These results suggest that \(G>G_{\mathrm{SN}}\) makes controlled
+behaviour possible, but it does not guarantee control from
+every starting point. The initial condition must also lie in
+the region attracted to the stable equilibrium.
 
 \end{document}
