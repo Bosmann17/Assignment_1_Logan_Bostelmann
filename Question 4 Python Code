@@ -1,5 +1,6 @@
 # MATH4041/MCSC6120 Assignment 1 - Question 4
 # Based on g_simul.py by L. van Veen, Ontario Tech University
+# Logan Bostelmann - 100924105
 
 import numpy as np
 import matplotlib.pyplot as plt
